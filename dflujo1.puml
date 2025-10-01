@@ -1,0 +1,29 @@
+@startuml
+!theme vibrant
+
+title Flujo Principal de la Aplicación (app.py)
+
+start
+:Inicializar GUI y establecer parámetros por defecto;
+
+repeat
+  :Esperar interacción del usuario;
+  :Usuario hace clic en "Ejecutar Simulación";
+  :Leer parámetros de los campos de la GUI;
+  
+  if (¿Son los datos de entrada numéricos?) then (sí)
+    :Convertir parámetros a float/int;
+    if (check_stability(params) es verdadero?) then (sí)
+      :Llamar a generate_signals() para crear señales;
+      :Llamar a process_system() para calcular la salida real;
+      :Llamar a plot_signals() para mostrar los gráficos;
+    else (no)
+      :Mostrar mensaje de advertencia de estabilidad;
+    endif
+  else (no)
+    :Mostrar mensaje de error de entrada inválida;
+  endif
+repeat while (Usuario no cierra la app) is (sí)
+stop
+
+@enduml

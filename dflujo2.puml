@@ -1,0 +1,30 @@
+@startuml
+!theme vibrant
+
+title Flujo de la Función process_system()
+
+start
+:Recibir señal de entrada x_n y parámetros del sistema;
+:Calcular constantes de la ecuación en diferencias (C1, C2, C3, C4, K);
+:Inicializar vector de salida y_n con ceros;
+
+if (La señal tiene al menos un punto?) then (sí)
+  :Calcular condición inicial y_n[0] = K * x_n[0];
+endif
+
+if (La señal tiene al menos dos puntos?) then (sí)
+  :Calcular condición inicial y_n[1] = C1*y_n[0] + K*(x_n[1] - C3*x_n[0]);
+endif
+
+:Iniciar bucle para n desde 2 hasta N-1;
+while (n < N)
+  :Aplicar fórmula recursiva completa:
+  y_n[n] = f(y_n[n-1], y_n[n-2], x_n[n], x_n[n-1], x_n[n-2]);
+  :n = n + 1;
+endwhile
+
+:Retornar el vector de salida procesado y_n;
+
+stop
+
+@enduml

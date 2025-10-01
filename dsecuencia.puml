@@ -1,0 +1,46 @@
+@startuml
+!theme vibrant
+
+actor Usuario
+participant "GUI (app.py)" as App
+participant "Diseño (system_design.py)" as System
+participant "Visualización (visualization.py)" as Viz
+
+skinparam sequence {
+    ParticipantBackgroundColor #EFEFEF
+    ActorBackgroundColor #BDE0EB
+}
+
+title Secuencia de Simulación del Sistema Discreto
+
+Usuario -> App: Ingresa parámetros (a, b, c, d, k, N)
+Usuario -> App: Clic en "Ejecutar Simulación"
+activate App
+
+App -> System: check_stability(params)
+activate System
+System --> App: Retorna estado de estabilidad (bool)
+deactivate System
+
+alt Sistema Estable
+    App -> System: generate_signals(params, n_points)
+    activate System
+    System --> App: Retorna (n, x_n, y_teorica)
+    deactivate System
+
+    App -> System: process_system(x_n, params)
+    activate System
+    System --> App: Retorna (y_procesada)
+    deactivate System
+
+    App -> Viz: plot_signals(n, x_n, y_teorica, y_procesada)
+    activate Viz
+    Viz --> Usuario: Muestra ventana con gráficos
+    deactivate Viz
+else Sistema Inestable
+    App --> Usuario: Muestra advertencia de estabilidad
+end
+
+deactivate App
+
+@enduml
