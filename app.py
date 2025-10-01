@@ -8,14 +8,14 @@ import visualization
 class App(tk.Tk):
     def __init__(self):
         super().__init__()
-        self.title("Discrete System Simulator (Lab 1)")
-        self.geometry("350x380")
+        self.title("Simulador de Sistema Discreto (Lab 1)")
+        self.geometry("380x380")
 
-        # --- Parameter Frame ---
-        param_frame = ttk.LabelFrame(self, text="System and Signal Parameters")
+        # --- Frame de Parámetros ---
+        param_frame = ttk.LabelFrame(self, text="Parámetros del Sistema y la Señal")
         param_frame.pack(padx=10, pady=10, fill="x")
         
-        # Default stable values
+        # Valores estables por defecto
         self.params = {
             'a': tk.StringVar(value="1.0"),
             'b': tk.StringVar(value="0.01"),
@@ -25,24 +25,24 @@ class App(tk.Tk):
             'n_points': tk.StringVar(value="150")
         }
         
-        # Create input fields
-        self.create_entry(param_frame, "a (input gain):", self.params['a'], 0)
-        self.create_entry(param_frame, "b (input exponent):", self.params['b'], 1)
-        self.create_entry(param_frame, "c (output gain):", self.params['c'], 2)
-        self.create_entry(param_frame, "d (output exponent):", self.params['d'], 3)
-        self.create_entry(param_frame, "k (cosh factor):", self.params['k'], 4)
-        self.create_entry(param_frame, "N (points):", self.params['n_points'], 5)
+        # Crear campos de entrada
+        self.create_entry(param_frame, "a (ganancia entrada):", self.params['a'], 0)
+        self.create_entry(param_frame, "b (exponente entrada):", self.params['b'], 1)
+        self.create_entry(param_frame, "c (ganancia salida):", self.params['c'], 2)
+        self.create_entry(param_frame, "d (exponente salida):", self.params['d'], 3)
+        self.create_entry(param_frame, "k (factor cosh):", self.params['k'], 4)
+        self.create_entry(param_frame, "N (puntos):", self.params['n_points'], 5)
 
-        # --- Stability Info ---
+        # --- Información de Estabilidad ---
         stability_label = ttk.Label(
             self, 
-            text="Stability Condition: d + |k| < 0", 
+            text="Condición de Estabilidad: d + |k| < 0", 
             font=("Helvetica", 10, "italic")
         )
         stability_label.pack(pady=(5, 10))
         
-        # --- Run Button ---
-        run_button = ttk.Button(self, text="Run Simulation", command=self.run_simulation)
+        # --- Botón de Ejecución ---
+        run_button = ttk.Button(self, text="Ejecutar Simulación", command=self.run_simulation)
         run_button.pack(pady=10, ipadx=10, ipady=5)
 
     def create_entry(self, parent, text, var, row):
@@ -53,29 +53,29 @@ class App(tk.Tk):
 
     def run_simulation(self):
         try:
-            # Convert string variables to floats/ints
+            # Convertir variables string a float/int
             float_params = {key: float(val.get()) for key, val in self.params.items() if key != 'n_points'}
             n_points = int(self.params['n_points'].get())
         except ValueError:
-            messagebox.showerror("Invalid Input", "Please enter valid numbers for all parameters.")
+            messagebox.showerror("Entrada Inválida", "Por favor, ingrese números válidos para todos los parámetros.")
             return
 
-        # 1. Check for system stability
+        # 1. Verificar la estabilidad del sistema
         if not system_design.check_stability(float_params):
             messagebox.showwarning(
-                "Stability Warning",
-                f"The system is UNSTABLE with the current parameters (d={float_params['d']}, k={float_params['k']}).\n"
-                "Please ensure that d + |k| < 0."
+                "Advertencia de Estabilidad",
+                f"El sistema es INESTABLE con los parámetros actuales (d={float_params['d']}, k={float_params['k']}).\n"
+                "Por favor, asegúrese de que d + |k| < 0."
             )
             return
 
-        # 2. Generate the signals
+        # 2. Generar las señales
         n, x_n, y_theoretical = system_design.generate_signals(float_params, n_points)
         
-        # 3. Process the input through the system
+        # 3. Procesar la entrada a través del sistema
         y_processed = system_design.process_system(x_n, float_params)
         
-        # 4. Plot the results
+        # 4. Graficar los resultados
         visualization.plot_signals(n, x_n, y_theoretical, y_processed)
 
 if __name__ == "__main__":
