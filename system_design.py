@@ -41,7 +41,7 @@ def process_system(x_n: np.ndarray, params: dict) -> np.ndarray:
     obtener la salida real y(n) usando la ecuación en diferencias recursiva.
     """
     # Parámetros del sistema
-    a = params.get('a', 1.0)
+    a = params.get('a', 17.0)
     b = params.get('b', 0.01)
     c = params.get('c', 1.0)
     d = params.get('d', -0.1)
